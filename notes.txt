@@ -1,0 +1,267 @@
+Assignment
+
+Build a function knight_moves that shows the shortest possible way
+to get from one square to another by outputting all squares the
+knight will stop along the way.
+
+Think of the board as having 2-dimensional coordinates.
+
+Examples:
+
+knight_moves([0,0], [1,2]) == [[0,0], [1,2]]
+knight_moves([0,0], [3,3]) == [[0,0], [1,2], [3,3]]
+knight_moves([3,3], [0,0]) == [[3,3], [1,2], [0,0]]
+
+
+Notes:
+
+[0,0] doesn't have to be the middle of the board.
+It can be, for example, the left down edge of the board.
+
+That said: board is 8x8.
+Which implies that coordinates for each side 
+range from 0-7.
+
+In light of examples provided and interpretation of [0,0]
+how could the axis for the two coordinates be set?
+
+Knight basic move: 2 steps forward and 1 step to the side.
+
+If [0,0] is left down edge, then [1,2] would define the
+horizontal axis first and then the vertical axis.
+
+Hence, coordinates can be defined as [x,y] where 
+x is the horizontal axis and y the vertical axis
+in a 0-7 axis to another 0-7 axis.
+
+
+The question now seems to be:
+How to produce a graph of all the possible knight positions?
+
+Assignment instructions only say as regards to this point:
+Put together a script that creates a game board and a knight.
+Treat all possible moves the knight could make as children
+in a tree. Don't allow any moves to go off the board.
+
+In principle one should be able to derive all possible knight 
+positions from the transformation of any given coordinate 
+in accordance to some rule which expresses the knight's basic 
+move.
+
+How could one mathematically express the knight's basic move?
+
+Given [x, y] one would get another possible position thus:
+x + 1, y + 2
+
+Given [x, y] one would also get another possibile position thus:
+x + 2, y + 1
+
+An perhaps even:
+x - 1, y - 2
+x - 2, y - 1
+
+Of course all values will have to be: value mod 7 
+
+This being said, let us focus on coordinates [0,0]
+[1,2] and [2,1] are real possible coordinates
+[6,5] and [5,6] though possible coordinates would not
+be actually possible coordinates.
+Why is that?
+It seems to be because the values are negative.
+
+For if one were to consider the coordinates [3,3]
+Possible coordinates would be:
+[4,5], [5,4], [2,1], [1,2]
+Which would be all actually possible coordinates.
+
+In accordance to this line of thought:
+derivable coordinates would be actual so long as 
+result of the transforming operations would not 
+result in negative values.
+
+However is this the only actual restriction?
+What about when resulting values from the 
+transforming operation surpass 7?
+
+Let's take, for example, coordinates [7,5],
+a derivable position from [4,5].
+
+Considered visually coordinates [7,5]
+place the knight on the farthermost horizontal square
+to the right of the board, fives squares up.
+That seems to mean: addition to the x-axis should not
+be possible.
+
+To sum up: actually possible derivable coordinates
+from the above operations will result so long
+as output values are:
+    not negative and/or not greater to 7.
+
+
+Done: How to mathematically extract all possible 
+positions on the board from any given coordinate.
+
+Question now seems to be:
+How to translate all this into code?
+
+Again:
+Assignment instructions only say as regards to this point:
+1. Put together a script that creates a game board and a knight.
+2. Treat all possible moves the knight could make as children
+in a tree. Don't allow any moves to go off the board.
+
+First instruction suggests the creation of a board and 
+knight separately.
+Second instruction suggests to «treat all possible moves the 
+knight could make as children in a tree.»
+
+As regards to the second instruction:
+"Worst case scenario": knight position would admit 4 actual possible 
+transformations of given position.
+That is:
+"Worst case scenario": given position will be root to 4 branches.
+Guessing, "best case scenario": given position will be root to 2 branches.
+
+Second instruction thus suggests, in light of what was done with
+binary search trees:
+creation of node class and tree class
+
+Examples suggest arrays as input.
+
+-------------------------------------------------------------------------
+
+As of right now, steps 1 and 2 of assignment's instructions
+seem to be at least partially fulfilled.
+These instructions were, once again:
+1. Put together a script that creates a game board and a knight.
+2. Treat all possible moves the knight could make as children
+in a tree. Don't allow any moves to go off the board.
+
+As of right now, only a doubt about the fulfillment of the first
+instruction makes itself feel.
+To some extent, the code so far sees to only have created a knight
+being the board derived from that code.
+However proceed we shall! And return to it we shall, if we must.
+
+As regards to the second instruction it perhaps could be fulfilled 
+to a greater extent if the build_tree method could be called on each
+of the children coordinates. 
+However, this generates an error. 
+From memory: stack call run too deep kind of error.
+
+Once more, as regards to instruction 2, proceed we shall and return
+to it we shall, if we must.
+
+Next assignment's instruction:
+3. Decide which search algorithm is best to use for this case. 
+    Hint: one of them could be a potentially infinite series.
+
+Let's take one of the examples from above and try and make 
+progress from there.
+
+knight_moves([0,0],[1,2]) == [[0,0],[1,2]]
+In this case, ending square is one of starting square's
+children.
+One would just have to check if ending square is one of the 
+starting square's children.
+
+knight_moves([0,0],[3,3]) == [[0,0],[1,2],[3,3]]
+In this case, ending square is not one of starting square's
+children.
+It is instead a child of one of the children of the starting 
+square.
+How would the search have to proceed to most efficiently figure
+this out?
+
+1st step: Check if end-square != any of initial-square's children.
+
+[3,3] is obtained from [1,2] by the second manner of deriving 
+node children: add 2 to x and 1 to y.
+
+However, nothing in principle seems to oppose [3,3] being obtained
+from [2,1] by: x + 1 and y + 2
+Let us leave this consideration to the side for a moment.
+
+If end-square != node's children, what would justify opting for the
+[1,2] path to [3,3] ?
+
+In this case [0,0] has the children: [1,2], [2,1].
+Shortest path is equal either through [1,2] or through [2,1].
+
+But in general, what would be a good possibility to explore as a second 
+step on the search?
+
+Let's consider the following example:
+> knight_moves([3,3],[4,3])
+  => You made it in 3 moves!  Here's your path:
+    [3,3]
+    [4,5]
+    [2,4]
+    [4,3]
+
+
+Coordinates [2,4] don't show up as [4,5]'s children nodes
+Tranformations involved in the previous mapping of squares:
+x + 1, y + 2
+x - 2, y - 1
+x + 2, y - 1
+
+
+Last transformations was not identified previously.
+Possible transformations identified:
+
+x + 1, y + 2
+x + 2, y + 1
+x - 1, y - 2
+x - 2, y - 1
+
+On the center knight has not 4 but 8 possible derivable
+positions!
+
+Hence all possible children, include previous and:
+
+x + 1, y - 2
+x + 2, y - 1
+x - 1, y + 2
+x - 2, y + 1
+
+
+------------------------------------------------------------------
+
+That fixed let us refocus on the 3rd instruction on the assignment.
+Problem was: 
+What is the best way to find out end-square if it is not any of 
+initial's square's children nodes?
+
+Let's again consider the example:
+> knight_moves([3,3],[4,3])
+  => You made it in 3 moves!  Here's your path:
+    [3,3]
+    [4,5]
+    [2,4]
+    [4,3]
+
+x from end-square > x initial-square
+y from end-square == y from initial-square
+
+
+All possible relations between start-square and end-square,
+[s == start-square, e == end-square]
+xs > xe, ys > ye: ch3, ch4 ?
+xs > xe, ys < ye: ch7, ch8 ?
+xs > xe, ys == ye: above...?
+
+xs == xe, ys > ye: ch3, ch4, ch5, ch6 ?
+xs == xe, ys < ye: ch7, ch8, ch1, ch2 ?
+xs == xe, ys == ye
+
+xs < xe, ys > ye: ch5, ch6 ?
+xs < xe, ys < ye: ch1, ch2 ?
+xs < xe, ys == ye: above...?
+
+
+Children's formal mapping
+ch1, ch2 x++, y++
+ch3, ch4 x--, y--
+ch5, ch6 x++, y--
+ch7, ch8 x--, y++
