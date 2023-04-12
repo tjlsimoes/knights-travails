@@ -83,6 +83,7 @@ class Board < KnightTree
     def initialize
         
     end
+    
 
     def knight_moves(insq, endsq)
         
@@ -97,7 +98,18 @@ class Board < KnightTree
             current = queue.shift
 
             if current[0].coordinates == endsq
-                return "#{current[1..]}"
+                puts "You made it in #{current[1]} moves! Here's your path:"
+                path_flat = current[2..].flatten
+                path = []
+                i = 0
+                while i < path_flat.length
+                    
+                    puts "#{[path_flat[i], path_flat[i + 1]]}"
+                    path << [path_flat[i], path_flat[i + 1]]
+
+                    i += 2
+                end
+                return [current[1], path]
             end
             
             for i in children(current[0]) do
@@ -138,7 +150,7 @@ end
 
 board = Board.new
 
-p board.knight_moves([3,3],[4,3])
+board.knight_moves([3,3],[4,3])
 
 
 
