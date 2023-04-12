@@ -84,86 +84,53 @@ class Board < KnightTree
         
     end
 
-    # def knight_moves(insq, endsq, i = 0)
-
-    #     node = build_tree(insq)
-
-    #     p insq 
-    #     p endsq 
-
-    #     p node
-        
-    #     if insq == endsq
-    #         return p "#{endsq} #{i}"
-    #     elsif insq[0] > endsq[0]
-    #         array = [node.child3,node.child4,node.child7,node.child8]
-    #         p array
-
-    #         for x in array do
-    #             if x != nil 
-    #                 build_tree(x)
-    #                 i += 1
-    #                 knight_moves(x, endsq, i) if i < 5
-    #             end
-    #         end
-    #     elsif insq[0] < endsq[0]
-    #         array = [node.child1,node.child2,node.child5,node.child6]
-    #         p array
-
-    #         for x in array do
-    #             if x != nil 
-    #                 build_tree(x)
-    #                 i += 1
-    #                 knight_moves(x, endsq, i) if i < 5
-    #             end
-    #         end
-
-    #     elsif insq[0] == endsq[0]
-    #         array = [node.child1,node.child2, node.child3, node.child4, node.child5,node.child6,
-    #                     node.child7, node.child8]
-    #         p array
-
-    #         for x in array do
-    #             if x != nil 
-    #                 build_tree(x)
-    #                 i += 1
-    #                 knight_moves(x, endsq, i) if i < 5
-    #             end
-    #         end
-    #     end
-
-    # end
-
     def knight_moves(insq, endsq)
         
         node = build_tree(insq)
 
         queue = [[node, 0]]
 
-
-        path = []
         visited = [node.coordinates]
+
 
         while !(queue.empty?)
             current = queue.shift
 
-            path << [current[0].coordinates, current[1]]
-            
-            return "#{path}; #{current[1]} steps!" if current[0].coordinates == endsq
+            if current[0].coordinates == endsq
+                return "#{current[1..]}"
+            end
             
             for i in children(current[0]) do
                 if !(visited.include?(i))
                     visited << i
-                    queue.push([build_tree(i), current[1] + 1])
+
+                    # for every new cylcle, for every new current, append previous current,
+                    # to indication of current present on queue sub-arrays
+                    el_to_add = [build_tree(i), current[1] + 1]
+
+                    p "Current [2..]"
+                    p current[2..]
+
+                    if !(current[2..].empty?)
+                        el_to_add[2] = [current[2..] + current[0].coordinates]
+                    else
+                        el_to_add[2] = [current[0].coordinates]
+                    end
+                    queue.push(el_to_add)
                 end
             end
-        # p current[0].coordinates
 
-        # p queue.map{ |array| [array[0].coordinates, array[1]]}
+
+            p current[0].coordinates
+            p "Select array[1] == current[1] + 1"
+            p queue.select { |array| array[1] == current[1] + 1}.map{ |array| [array[0].coordinates, array[1], array[2..]]}
+            p "Queue"
+            p queue.map{ |array| [array[0].coordinates, array[1], array[2..]]}
+            puts " "
+
         end
     end
-
-    
+            
 end
 
 
