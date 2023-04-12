@@ -109,6 +109,8 @@ class Board < KnightTree
 
                     i += 2
                 end
+                puts "#{endsq}"
+                path << endsq
                 return [current[1], path]
             end
             
@@ -116,12 +118,7 @@ class Board < KnightTree
                 if !(visited.include?(i))
                     visited << i
 
-                    # for every new cylcle, for every new current, append previous current,
-                    # to indication of current present on queue sub-arrays
                     el_to_add = [build_tree(i), current[1] + 1]
-
-                    p "Current [2..]"
-                    p current[2..]
 
                     if !(current[2..].empty?)
                         el_to_add[2] = [current[2..] + current[0].coordinates]
@@ -133,12 +130,12 @@ class Board < KnightTree
             end
 
 
-            p current[0].coordinates
-            p "Select array[1] == current[1] + 1"
-            p queue.select { |array| array[1] == current[1] + 1}.map{ |array| [array[0].coordinates, array[1], array[2..]]}
-            p "Queue"
-            p queue.map{ |array| [array[0].coordinates, array[1], array[2..]]}
-            puts " "
+            # p current[0].coordinates
+            # p "Select array[1] == current[1] + 1"
+            # p queue.select { |array| array[1] == current[1] + 1}.map{ |array| [array[0].coordinates, array[1], array[2..]]}
+            # p "Queue"
+            # p queue.map{ |array| [array[0].coordinates, array[1], array[2..]]}
+            # puts " "
 
         end
     end
@@ -150,7 +147,7 @@ end
 
 board = Board.new
 
-board.knight_moves([3,3],[4,3])
+board.knight_moves([0,0],[3,3])
 
 
 
